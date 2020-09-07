@@ -1,0 +1,14 @@
+// functional stateless component
+var MovieList = ({ movies }) => React.createElement(
+  'div',
+  null,
+  React.createElement(
+    'h1',
+    null,
+    'Hello MovieList'
+  ),
+  console.log('movies props', movies)
+);
+
+export default MovieList;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NyYy9jb21wb25lbnRzL01vdmllTGlzdC5qc3giXSwibmFtZXMiOlsiTW92aWVMaXN0IiwibW92aWVzIiwiY29uc29sZSIsImxvZyJdLCJtYXBwaW5ncyI6IkFBQUE7QUFDQSxJQUFJQSxZQUFZLENBQUMsRUFBQ0MsTUFBRCxFQUFELEtBRWQ7QUFBQTtBQUFBO0FBQ0U7QUFBQTtBQUFBO0FBQUE7QUFBQSxHQURGO0FBRUdDLFVBQVFDLEdBQVIsQ0FBWSxjQUFaLEVBQTRCRixNQUE1QjtBQUZILENBRkY7O0FBU0EsZUFBZUQsU0FBZiIsImZpbGUiOiJNb3ZpZUxpc3QuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBmdW5jdGlvbmFsIHN0YXRlbGVzcyBjb21wb25lbnRcbnZhciBNb3ZpZUxpc3QgPSAoe21vdmllc30pID0+IChcblxuICA8ZGl2PlxuICAgIDxoMT5IZWxsbyBNb3ZpZUxpc3Q8L2gxPlxuICAgIHtjb25zb2xlLmxvZygnbW92aWVzIHByb3BzJywgbW92aWVzKX1cblxuICA8L2Rpdj5cbilcblxuZXhwb3J0IGRlZmF1bHQgTW92aWVMaXN0O1xuXG4iXX0=
