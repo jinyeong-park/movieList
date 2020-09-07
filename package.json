@@ -1,0 +1,36 @@
+{
+  "name": "react_movielist",
+  "version": "1.0.0",
+  "description": "Implement a movie list with react",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jinyeong-park/react_movieList.git"
+  },
+  "author": "Jinyeong Park",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jinyeong-park/react_movieList/issues"
+  },
+  "scripts": {
+    "start": "live-server",
+    "postinstall": "curl -s https://raw.githubusercontent.com/reactorcore/pomander/master/bin/install | bash",
+    "build:watch": "babel . --out-dir compiled --presets=react --ignore=node_modules,compiled --source-maps inline --watch"
+  },
+  "dependencies": {
+    "jquery": "^2.2.1",
+    "lodash": "^4.6.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.6.5",
+    "babel-plugin-react": "1.0.0",
+    "babel-preset-react": "^6.5.0",
+    "chai": "^3.5.0",
+    "mocha": "2.3.3",
+    "react-test-renderer": "^16.12.0",
+    "sinon": "1.17.3"
+  }
+}
