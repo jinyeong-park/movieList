@@ -1,15 +1,24 @@
 // functional stateless component
 import MovieItem from './MovieItem.js'
 
-var MovieList = ({movies}) => (
+var MovieList = (props) => (
+    <div>
+        <table>
+            <tbody>
+                {props.movies.map((movie, index) => (
+                    <tr>
+                        <MovieItem key={index} movie={movie}/>
+                    </tr>
+                    ))
+                }
 
-  <div>
-    <h1>Hello MovieList</h1>
-    {movies.map((movie => <MovieItem movie={movie}/>))}
+            </tbody>
+        </table>
+        {console.log('movies props', props)}
+    </div>
 
-    {/* {console.log('movies props', movies)} */}
 
-  </div>
+
 )
 
 export default MovieList;

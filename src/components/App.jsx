@@ -19,8 +19,12 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>Hello App</h1>
-        <MovieList movies={this.state.movies}/>
+        <div id='container'>
+          {/* <h1>Hello App</h1> */}
+          <h1>MovieList</h1>
+          <MovieList movies={this.state.movies}/>
+        </div>
+
       </div>
     );
   }

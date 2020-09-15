@@ -2,10 +2,11 @@
 
 var MovieItem = ({movie}) => (
 
-  <div>
-    <li>{movie.title}</li>
-    {console.log('movie props', movie)}
-  </div>
+
+
+    <td>{movie.title}</td>
+    {/* {console.log('movie props', movie)} */}
+
 )
 
 export default MovieItem;

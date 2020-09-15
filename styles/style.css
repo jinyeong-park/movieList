@@ -1,0 +1,26 @@
+body {
+  font-family: sans-serif, arial;
+}
+/* th {
+  border: 2px solid lightgray;
+  border-collapse: collapse;
+  padding: 20px;
+  width: 400px;
+  background-color: lightgray
+
+}
+*/
+table, td {
+  border: 2px solid lightgray;
+  border-collapse: collapse;
+  padding: 20px;
+  width: 400px;
+
+}
+
+#container {
+  border: 2px solid lightgray;
+  border-collapse: collapse;
+  padding: 20px;
+  width: 400px;
+}
