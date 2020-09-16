@@ -12,16 +12,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      movies: [
-        {title: 'Mean Girls',
-         detail: {
-         year: 1995, runtime: '107 min', metascore: 46, imdbrating: 6.2, watched: false},
-         watched: false}
-        // {title: 'Hackers', watched: true},
-        // {title: 'The Grey', watched: true},
-        // {title: 'Sunshine', watched: false},
-        // {title: 'Ex Machina', watched: false},
-      ],
       allMovies: [
         {title: 'Hackers', watched: true},
         {title: 'The Grey', watched: true},
@@ -33,13 +23,13 @@ class App extends React.Component {
       showWatchedMenu: true,
       showMovieBySearch:  false
     };
+    this.getAllMovies = this.getAllMovies.bind(this);
     this.searchMovies = this.searchMovies.bind(this);
     this.handleRefresh = this.handleRefresh.bind(this);
     this.AddMovieInTheList = this.AddMovieInTheList.bind(this);
     this.UpdateWatchedToggle = this.UpdateWatchedToggle.bind(this);
     this.listWatchedMovies = this.listWatchedMovies.bind(this);
     this.listNotWatchedMovies = this.listNotWatchedMovies.bind(this);
-    this.getAllMovies = this.getAllMovies.bind(this);
   }
 
   componentDidMount() {
@@ -61,6 +51,32 @@ class App extends React.Component {
     })
   }
 
+  // Search movies with GET & params search
+  searchMovies (movieKeyword) {
+    console.log('query received:', movieKeyword);
+    // Send a POST request
+    axios({
+      method: 'get',
+      url: 'api/movies',
+      params: {
+        search: movieKeyword
+      }
+    })
+    .then((response) => {
+      console.log('axios GET SEAERCHED movie Success', response);
+      if (response.data.length !== 0) {
+        this.setState({
+          allMovies: response.data
+        })
+      } else {
+        this.setState({ allMovies: [{title: 'No movie found', watched: false}]
+        })
+      }
+    })
+    .catch((error) => {
+      console.log('axios GET SEAERCHED movie Error', error);
+    });
+  }
 
 
   // POST new movie and get updated movielist
@@ -80,33 +96,7 @@ class App extends React.Component {
     });
   }
 
-  // Search movies with GET & params search
-  searchMovies (movieKeyword) {
-    console.log('query received:', movieKeyword);
-    // Send a POST request
-    axios({
-      method: 'get',
-      url: 'api/movies',
-      params: {
-        search: movieKeyword
-      }
-    })
-    .then((response) => {
-      console.log('axios GET SEAERCHED movie Success', response);
-      if (response.data.length !== 0) {
-        this.setState({
-          allMovies: response.data
-        })
-      } else {
-        this.setState({
-          allMovies: [{title: 'No movie found', watched: false}]
-        })
-      }
-    })
-    .catch((error) => {
-      console.log('axios GET SEAERCHED movie Error', error);
-    });
-  }
+
 
    // Refresh = show all movies
   handleRefresh(e) {
