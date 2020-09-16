@@ -44,11 +44,11 @@ app.get('/api/movies', (req, res) => {
 
 // POST NEW MOVIE
 app.post('/api/movies', (req, res) => {
-  console.log('req.body', req.body)
+  //console.log('req.body.title', req.body.title)
   const { title } = req.body
   const q = `INSERT INTO movies (title, watched) VALUES (?, false)`;
 
-  db.connection.query(q, [title, watched], (err, data) => {
+  db.connection.query(q, [title], (err, data) => {
     if (err) {
       console.log('CONTROLLER POST MOVIES- ERR', err)
       res.status(400).send();

@@ -62,35 +62,21 @@ class App extends React.Component {
   }
 
 
-  // POST new movie
+  // POST new movie and show updated movielist
   AddMovieInTheList (videoTitle) {
-    // console.log('query received:', videoTitle);
-    axios.post('/api/movie', { title: videoTitle })
-    .then(function (response) {
+    //console.log('query received:', videoTitle);
+    axios.post('/api/movies', {title: videoTitle})
+    .then((response) => {
       console.log('axios POST new movie Success', response);
     })
-    .catch(function (error) {
+    .then(()=> {
+      console.log('axios POST successful now, request getAllmovies');
+      // call getAllMovies
+      this.getAllMovies();
+    })
+    .catch((error) => {
       console.log('axios POST new movie Error', error);
     });
-    // console.log('query received:', videoTitle);
-    // //make searched movie list ***** should make array format(linked with map)
-    // let allMovies =  this.state.allMovies;
-    // let alreadyIntheList = false;
-    // // After a user submits the search, if user typed video in not in the allMovies, add new video into allvideods
-    // for (let i = 0; i < allMovies.length; i++) {
-    //   // After a user submits the new movies, if it is not duplicate, add it to allvideos
-    //   if (allMovies[i].title.toLowerCase() === videoTitle.toLowerCase()) {
-    //     alert("this movie is already in the list!");
-    //     alreadyIntheList = true;
-    //   }
-    // }
-
-    // if (!alreadyIntheList) {
-    //   allMovies.push({title: videoTitle, watched: false});
-    //   this.setState({
-    //     allMovies: allMovies
-    //   })
-    // }
   }
 
   // List for watched movies
