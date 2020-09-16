@@ -10,12 +10,11 @@ const bodyParser = require('body-parser')
 
 // parse application/json
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))  // * false or true doesn't matter?
+app.use(bodyParser.urlencoded({ extended: false }))  // * false or true doesn't matter?
 
 //
 //app.use('/static', express.static(path.join(__dirname, 'public')))  //* official doc
 app.use('/', express.static(path.join(__dirname, '../client/dist')))
-
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World!')
@@ -46,8 +45,8 @@ app.get('/api/movies', (req, res) => {
 // POST NEW MOVIE
 app.post('/api/movies', (req, res) => {
   console.log('req.body', req.body)
-  const { title, watched } = req.body
-  const q = `INSERT INTO movies (title, watched) VALUES (?, ?)`;
+  const { title } = req.body
+  const q = `INSERT INTO movies (title, watched) VALUES (?, false)`;
 
   db.connection.query(q, [title, watched], (err, data) => {
     if (err) {

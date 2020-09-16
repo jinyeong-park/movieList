@@ -3,6 +3,7 @@ import MovieList from './MovieList.jsx';
 import Search from './Search.jsx';
 import Refresh from './Refresh.jsx';
 import AddMovie from './AddMovie.jsx';
+import axios from 'axios';
 import WatchedMovieList from'./WatchedMovieList.jsx';
 import NotWatchedMovieList from'./NotWatchedMovieList.jsx';
 
@@ -22,15 +23,10 @@ class App extends React.Component {
         // {title: 'Ex Machina', watched: false},
       ],
       allMovies: [
-        {title: 'Mean Girls',
-         detail: {
-          year: 1995, runtime: '107 min', metascore: 46, imdbrating: 6.2, watched: false
-        },
-        watched: false}
-        // {title: 'Hackers', watched: true},
-        // {title: 'The Grey', watched: true},
-        // {title: 'Sunshine', watched: false},
-        // {title: 'Ex Machina', watched: false},
+        {title: 'Hackers', watched: true},
+        {title: 'The Grey', watched: true},
+        {title: 'Sunshine', watched: false},
+        {title: 'Ex Machina', watched: false}
       ],
       watchedMovies: [],
       notWatchedMovies: [],
@@ -43,10 +39,58 @@ class App extends React.Component {
     this.UpdateWatchedToggle = this.UpdateWatchedToggle.bind(this);
     this.listWatchedMovies = this.listWatchedMovies.bind(this);
     this.listNotWatchedMovies = this.listNotWatchedMovies.bind(this);
+    this.getAllMovies = this.getAllMovies.bind(this);
   }
 
-  componetDidMount() {
+  componentDidMount() {
+    // getAllMovies()
+    this.getAllMovies();
 
+  }
+
+  getAllMovies() {
+    axios.get('/api/movies')
+    .then((response) => {
+      console.log('axios GET MOVIES RECEIVE RESPONSE', response.data);
+      this.setState({
+        allMovies: response.data
+      })
+    })
+    .catch((error) => {
+      console.log('axios GET MOVIES ERROR', error);
+    })
+  }
+
+
+  // POST new movie
+  AddMovieInTheList (videoTitle) {
+    // console.log('query received:', videoTitle);
+    axios.post('/api/movie', { title: videoTitle })
+    .then(function (response) {
+      console.log('axios POST new movie Success', response);
+    })
+    .catch(function (error) {
+      console.log('axios POST new movie Error', error);
+    });
+    // console.log('query received:', videoTitle);
+    // //make searched movie list ***** should make array format(linked with map)
+    // let allMovies =  this.state.allMovies;
+    // let alreadyIntheList = false;
+    // // After a user submits the search, if user typed video in not in the allMovies, add new video into allvideods
+    // for (let i = 0; i < allMovies.length; i++) {
+    //   // After a user submits the new movies, if it is not duplicate, add it to allvideos
+    //   if (allMovies[i].title.toLowerCase() === videoTitle.toLowerCase()) {
+    //     alert("this movie is already in the list!");
+    //     alreadyIntheList = true;
+    //   }
+    // }
+
+    // if (!alreadyIntheList) {
+    //   allMovies.push({title: videoTitle, watched: false});
+    //   this.setState({
+    //     allMovies: allMovies
+    //   })
+    // }
   }
 
   // List for watched movies
@@ -90,6 +134,7 @@ class App extends React.Component {
 
   // Search
   searchInfo (query) {
+
     console.log('query received:', query);
     //make searched movie list ***** should make array format(linked with map)
     let searchedList = [];
@@ -126,34 +171,12 @@ class App extends React.Component {
   handleRefresh(e) {
     e.preventDefault();
     console.log('refresh click')
-    this.setState({
-      movies: this.state.allMovies,
-      watchedMovies: [],
-      notWatchedMovies: []
-    })
-  }
-
-  // Add movie
-  AddMovieInTheList (videoTitle) {
-    console.log('query received:', videoTitle);
-    //make searched movie list ***** should make array format(linked with map)
-    let allMovies =  this.state.allMovies;
-    let alreadyIntheList = false;
-    // After a user submits the search, if user typed video in not in the allMovies, add new video into allvideods
-    for (let i = 0; i < allMovies.length; i++) {
-      // After a user submits the new movies, if it is not duplicate, add it to allvideos
-      if (allMovies[i].title.toLowerCase() === videoTitle.toLowerCase()) {
-        alert("this movie is already in the list!");
-        alreadyIntheList = true;
-      }
-    }
-
-    if (!alreadyIntheList) {
-      allMovies.push({title: videoTitle, watched: false});
-      this.setState({
-        allMovies: allMovies
-      })
-    }
+    this.getAllMovies()
+    // this.setState({
+    //   movies: this.state.allMovies,
+    //   watchedMovies: [],
+    //   notWatchedMovies: []
+    // })
   }
 
   render() {
@@ -181,7 +204,7 @@ class App extends React.Component {
           <button className='watched' onClick={this.listWatchedMovies}>Watched</button>
           <button className='unwatched' onClick={this.listNotWatchedMovies}>To Watch</button>
           {displayMovies}
-          <MovieList movies={this.state.movies} UpdateWatchedToggle={this.UpdateWatchedToggle}/>
+          <MovieList movies={this.state.allMovies} UpdateWatchedToggle={this.UpdateWatchedToggle}/>
         </div>
       </div>
     );

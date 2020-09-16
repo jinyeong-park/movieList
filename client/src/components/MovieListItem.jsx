@@ -39,11 +39,11 @@ class MovieListItem extends React.Component {
     let isTitleClickedForDetail = this.state.isTitleClickedForDetails;
     if (isTitleClickedForDetail) {
       displayMovieDetails = <div>
-                              <tr>Year: {this.props.movie.detail.year}</tr>
+                              {/* <tr>Year: {this.props.movie.title.year}</tr>
                               <tr>Runtime: {this.props.movie.detail.runtime}</tr>
                               <tr>Metascore: {this.props.movie.detail.metascore}</tr>
                               <tr>imdbRating: {this.props.movie.detail.imdbrating}</tr>
-                              <tr>Watched: {this.props.movie.detail.watched}</tr>
+                              <tr>Watched: {this.props.movie.detail.watched}</tr> */}
                             </div>
       // displayMovieDetails = <td>{this.props.movie.datail.year} {this.props.movie.datail.runtime} {this.props.movie.datail.metascore} {this.props.movie.datail.imdbrating} {this.props.movie.datail.watched}</td>
     } else {
@@ -52,7 +52,7 @@ class MovieListItem extends React.Component {
 
     return (
       <div>
-        {console.log('this.props.movie.detail.year', this.props.movie.detail.year)}
+        {/* {console.log('this.props.movie.detail.year', this.props.movie.detail.year)} */}
         <td onClick={this.onTitleClickHandler}>{this.props.movie.title}</td>
         <td>
           <form onSubmit={this.UpdateWatchedOrNotWatchedList}>
