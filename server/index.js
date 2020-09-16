@@ -27,16 +27,19 @@ app.use('/', express.static(path.join(__dirname, '../client/dist')))
 
 
 // ***** Without model/conntroller
-// GET ALL MOVIES
-app.get('/api/movies', (req, res) => {
-  let q = 'SELECT * FROM movies'
+// GET Movie or Search movies
+app.get('/api/movies/', (req, res) => {
+  // console.log(req.query);
+  // console.log(search);
+  const { search } = req.query;
 
+  let q = `SELECT * FROM movies WHERE title LIKE '%${search || ''}%'`
   db.connection.query(q, (err, data) => {
     if (err) {
-      console.log('CONTROLLER GET MOVIES SUCCESS- response')
+      console.log('CONTROLLER SEARCH MOVIES ERROR- response')
       res.status(400).send();
     } else {
-      console.log('CONTROLLER GET MOVIES SUCCESS- response', data)
+      console.log('CONTROLLER SEARCH MOVIES SUCCESS- response', data)
       res.status(200).send(data);
     }
   })
@@ -58,6 +61,7 @@ app.post('/api/movies', (req, res) => {
     }
   })
 })
+
 
 
 app.listen(port, () => {

@@ -23,7 +23,7 @@ class Search extends React.Component {
   handleSubmit (event) {
     // alert('user clicked submit button')
     event.preventDefault();
-    this.props.searchInfo(this.state.video)
+    this.props.searchMovies(this.state.video)
 
 
   }

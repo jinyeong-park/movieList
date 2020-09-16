@@ -33,7 +33,7 @@ class App extends React.Component {
       showWatchedMenu: true,
       showMovieBySearch:  false
     };
-    this.searchInfo = this.searchInfo.bind(this);
+    this.searchMovies = this.searchMovies.bind(this);
     this.handleRefresh = this.handleRefresh.bind(this);
     this.AddMovieInTheList = this.AddMovieInTheList.bind(this);
     this.UpdateWatchedToggle = this.UpdateWatchedToggle.bind(this);
@@ -62,7 +62,8 @@ class App extends React.Component {
   }
 
 
-  // POST new movie and show updated movielist
+
+  // POST new movie and get updated movielist
   AddMovieInTheList (videoTitle) {
     //console.log('query received:', videoTitle);
     axios.post('/api/movies', {title: videoTitle})
@@ -78,6 +79,47 @@ class App extends React.Component {
       console.log('axios POST new movie Error', error);
     });
   }
+
+  // Search movies with GET & params search
+  searchMovies (movieKeyword) {
+    console.log('query received:', movieKeyword);
+    // Send a POST request
+    axios({
+      method: 'get',
+      url: 'api/movies',
+      params: {
+        search: movieKeyword
+      }
+    })
+    .then((response) => {
+      console.log('axios GET SEAERCHED movie Success', response);
+      if (response.data.length !== 0) {
+        this.setState({
+          allMovies: response.data
+        })
+      } else {
+        this.setState({
+          allMovies: [{title: 'No movie found', watched: false}]
+        })
+      }
+    })
+    .catch((error) => {
+      console.log('axios GET SEAERCHED movie Error', error);
+    });
+  }
+
+   // Refresh = show all movies
+  handleRefresh(e) {
+    e.preventDefault();
+    console.log('refresh click')
+    this.getAllMovies()
+  // this.setState({
+  //   movies: this.state.allMovies,
+  //   watchedMovies: [],
+  //   notWatchedMovies: []
+  // })
+  }
+
 
   // List for watched movies
   listWatchedMovies() {
@@ -118,52 +160,8 @@ class App extends React.Component {
     this.setState({movies: lists})
   }
 
-  // Search
-  searchInfo (query) {
 
-    console.log('query received:', query);
-    //make searched movie list ***** should make array format(linked with map)
-    let searchedList = [];
-    // console.log(this.props.movies)
-    let allMovies =  this.state.movies;
-    let found = false;
-    for (let i = 0; i < allMovies.length; i++) {
-      // After a user submits the search, display all matches (or partial matches) to that title.
-      if (allMovies[i].title.toLowerCase().includes(query.toLowerCase())) {
-      // if (allMovies[i].title.toLowerCase() === query.toLowerCase()) {
-        console.log('title and searching are matching')
-        searchedList.push(allMovies[i]);
-        this.setState({
-          movies: searchedList,
-          watchedMovies: [],
-          notWatchedMovies: []
-        })
-        found = true;
-      }
-    }
-    // Handle the case of "no movie by that name found
-    if (!found) {
-      this.setState({
-        movies: [
-          {title: 'no movie by that name found', watched: null}
-        ],
-        watchedMovies: [],
-        notWatchedMovies: []
-      })
-    }
-  }
 
-  // Refresh = show all movies
-  handleRefresh(e) {
-    e.preventDefault();
-    console.log('refresh click')
-    this.getAllMovies()
-    // this.setState({
-    //   movies: this.state.allMovies,
-    //   watchedMovies: [],
-    //   notWatchedMovies: []
-    // })
-  }
 
   render() {
     // Conditional rendering
@@ -184,7 +182,7 @@ class App extends React.Component {
           <AddMovie AddMovieInTheList={this.AddMovieInTheList}/>
 
           <div className="search-refresh">
-            <Search searchInfo={this.searchInfo}/>
+            <Search searchMovies={this.searchMovies}/>
             <Refresh handleRefresh={this.handleRefresh}/>
           </div>
           <button className='watched' onClick={this.listWatchedMovies}>Watched</button>
