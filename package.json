@@ -16,7 +16,6 @@
     "nodemon": "^2.0.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "save-dev": "0.0.1-security",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
