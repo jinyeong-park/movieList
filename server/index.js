@@ -10,7 +10,7 @@ const bodyParser = require('body-parser')
 
 // parse application/json
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))  // * false or true doesn't matter?
+app.use(bodyParser.urlencoded({ extended: true }))  // ajax default
 
 //
 //app.use('/static', express.static(path.join(__dirname, 'public')))  //* official doc
@@ -29,12 +29,12 @@ app.use('/', express.static(path.join(__dirname, '../client/dist')))
 // ***** Without model/conntroller
 // GET Movie or Search movies
 app.get('/api/movies/', (req, res) => {
-  // console.log(req.query);
+  console.log('req.query', req.query);
   // console.log(search);
   const { search } = req.query;
 
   let q = `SELECT * FROM movies WHERE title LIKE '%${search || ''}%'`
-  db.connection.query(q, (err, data) => {
+  db.query(q, (err, data) => {
     if (err) {
       console.log('CONTROLLER SEARCH MOVIES ERROR- response')
       res.status(400).send();
@@ -51,13 +51,42 @@ app.post('/api/movies', (req, res) => {
   const { title } = req.body
   const q = `INSERT INTO movies (title, watched) VALUES (?, false)`;
 
-  db.connection.query(q, [title], (err, data) => {
+  db.query(q, [title], (err, data) => {
     if (err) {
       console.log('CONTROLLER POST MOVIES- ERR', err)
       res.status(400).send();
     } else {
       console.log('CONTROLLER POST MOVIES SUCCESS- response')
       res.status(200).send('post success');
+    }
+  })
+})
+
+// PATCH - partial change  - Update
+app.patch('/api/movies/:movieId', (req, res) => {
+  console.log('req.params', req.params)  // { movieId: '1' }
+  console.log('req.body', req.body)  //{ watched: 'false' }
+
+  let { movieId } = req.params
+  let { watched } = req.body
+
+  // In order to update the toggle, swap the value
+  // current watched value is true,
+     // assign false(0)
+  if (watched === 'true') {
+    watched = 0;
+  } else if (watched === 'false') {
+    watched = 1;
+  }
+  const q = `UPDATE movies SET watched = ? WHERE id = ?`;
+
+  db.query(q, [watched, movieId], (err, data) => {
+    if (err) {
+      console.log('CONTROLLER PATCH UPDATE watched ERR', err)
+      res.status(400).send();
+    } else {
+      console.log('CONTROLLER PATCH UPDATE watched SUCCESS- response')
+      res.status(200).send('patch success');
     }
   })
 })

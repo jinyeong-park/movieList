@@ -4,6 +4,7 @@ import Search from './Search.jsx';
 import Refresh from './Refresh.jsx';
 import AddMovie from './AddMovie.jsx';
 import axios from 'axios';
+import $ from 'jquery';
 import WatchedMovieList from'./WatchedMovieList.jsx';
 import NotWatchedMovieList from'./NotWatchedMovieList.jsx';
 
@@ -35,68 +36,57 @@ class App extends React.Component {
   componentDidMount() {
     // getAllMovies()
     this.getAllMovies();
-
   }
 
+  // ajax
   getAllMovies() {
-    axios.get('/api/movies')
-    .then((response) => {
-      console.log('axios GET MOVIES RECEIVE RESPONSE', response.data);
-      this.setState({
-        allMovies: response.data
-      })
-    })
-    .catch((error) => {
-      console.log('axios GET MOVIES ERROR', error);
+    $.ajax({
+      method: "GET",
+      url: '/api/movies',
+      success: (response) => {
+        console.log('ajax GET MOVIES RECEIVE RESPONSE', response); // axios - response.data
+        this.setState({
+          allMovies: response
+        })
+      },
+      error: (err) => console.log('ajax GET MOVIES ERROR', err)
     })
   }
 
   // Search movies with GET & params search
   searchMovies (movieKeyword) {
     console.log('query received:', movieKeyword);
-    // Send a POST request
-    axios({
-      method: 'get',
-      url: 'api/movies',
-      params: {
-        search: movieKeyword
-      }
-    })
-    .then((response) => {
-      console.log('axios GET SEAERCHED movie Success', response);
-      if (response.data.length !== 0) {
+    $.ajax({
+      method: "GET",
+      url: '/api/movies',
+      data: {search: movieKeyword},
+      success: (movies) => {
+        console.log('ajax Search GET Success', movies);
+
         this.setState({
-          allMovies: response.data
+          allMovies: movies
         })
-      } else {
-        this.setState({ allMovies: [{title: 'No movie found', watched: false}]
-        })
-      }
+        // cf.     this.getAllMovies();
+      },
+      error: (err) => console.log('ajax Search GET ERRROR', err)
     })
-    .catch((error) => {
-      console.log('axios GET SEAERCHED movie Error', error);
-    });
   }
 
 
   // POST new movie and get updated movielist
   AddMovieInTheList (videoTitle) {
-    //console.log('query received:', videoTitle);
-    axios.post('/api/movies', {title: videoTitle})
-    .then((response) => {
-      console.log('axios POST new movie Success', response);
+    console.log('query received:', videoTitle);
+    $.ajax({
+      method: "POST",
+      url: '/api/movies',
+      data: {title: videoTitle},    //**/{title: videoTitle}
+      success: () => {
+        console.log('ajax POST new movie Success');
+        this.getAllMovies();     //*
+      },
+      error: (err) => console.log('ajax POST new movie Error', err)
     })
-    .then(()=> {
-      console.log('axios POST successful now, request getAllmovies');
-      // call getAllMovies
-      this.getAllMovies();
-    })
-    .catch((error) => {
-      console.log('axios POST new movie Error', error);
-    });
   }
-
-
 
    // Refresh = show all movies
   handleRefresh(e) {
@@ -109,6 +99,21 @@ class App extends React.Component {
   //   notWatchedMovies: []
   // })
   }
+
+  // PATCH - partial change  - Update
+  UpdateWatchedToggle(movieId, watched) {
+    $.ajax({
+      method: "PATCH",
+      url: `api/movies/${movieId}`,
+      data: {watched: watched},    //**/{title: videoTitle}
+      success: () => {
+        console.log('ajax PATCH update watched Success');
+        this.getAllMovies();     //* render all movies
+      },
+      error: (err) => console.log('ajax PATCH update watched Error', err)
+    })
+  }
+
 
 
   // List for watched movies
@@ -125,29 +130,39 @@ class App extends React.Component {
     this.setState({watchedMovies: watchedList, showWatchedMenu: true, movies:[]})
   }
 
-  // List for not watched movies
-  listNotWatchedMovies() {
-    var notWatchedList = [];
-    var lists = this.state.allMovies;
-    for(let i = 0; i < lists.length; i+= 1) {
-      if(lists[i].watched === false) {
-        notWatchedList.push(lists[i]);
-      }
-    }
-    console.log('notWatchedList',notWatchedList)
-    this.setState({notWatchedMovies: notWatchedList, showWatchedMenu: false, movies:[]})
+  listWatchedMovies() {
+    axios.get('/api/movies')
+    .then((response) => {
+      // console.log('axios GET listWatchedMovies RESPONSE', response.data);
+      let watchedList = response.data.filter((movie) => movie.watched === 'true');
+
+      console.log('axios GET WatchedMovies filted', watchedList);
+      this.setState({
+        allMovies: watchedList
+      })
+    })
+    .catch((error) => {
+      console.log('axios GET listWatchedMovies ERROR', error);
+    })
   }
 
-  // Update videos based on clicking individual movie watched button
-  UpdateWatchedToggle(title, watched) {
 
-    var lists = this.state.movies;
-    for (let i = 0; i < lists.length; i++) {
-      if(lists[i].title === title) {
-        lists[i].watched = watched;
-      }
-    }
-    this.setState({movies: lists})
+
+  // List for not watched movies
+  listNotWatchedMovies() {
+    axios.get('/api/movies')
+    .then((response) => {
+      // console.log('axios GET listWatchedMovies RESPONSE', response.data);
+      let ToWatchList = response.data.filter((movie) => movie.watched === 'false');
+
+      console.log('axios GET ToWatchMovies filted', ToWatchList);
+      this.setState({
+        allMovies: ToWatchList
+      })
+    })
+    .catch((error) => {
+      console.log('axios GET ToWatchMovies filted ERROR', error);
+    })
   }
 
 
@@ -197,3 +212,64 @@ export default App;
 //   {/* {console.log('hello console inside from app')} */}
 // )
 
+
+
+// axios version - request
+  // getAllMovies() {
+  //   axios.get('/api/movies')
+  //   .then((response) => {
+  //     console.log('axios GET MOVIES RECEIVE RESPONSE', response.data);
+  //     console.log('axios GET MOVIES type of watched', typeof response.data[0].watched);
+  //     this.setState({
+  //       allMovies: response.data
+  //     })
+  //   })
+  //   .catch((error) => {
+  //     console.log('axios GET MOVIES ERROR', error);
+  //   })
+  // }
+
+  // // Search movies with GET & params search
+  // searchMovies (movieKeyword) {
+  //   console.log('query received:', movieKeyword);
+  //   // Send a POST request
+  //   axios({
+  //     method: 'get',
+  //     url: 'api/movies',
+  //     params: {
+  //       search: movieKeyword
+  //     }
+  //   })
+  //   .then((response) => {
+  //     console.log('axios GET SEAERCHED movie Success', response);
+  //     if (response.data.length !== 0) {
+  //       this.setState({
+  //         allMovies: response.data
+  //       })
+  //     } else {
+  //       this.setState({ allMovies: [{title: 'No movie found', watched: false}]
+  //       })
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.log('axios GET SEAERCHED movie Error', error);
+  //   });
+  // }
+
+
+  // // POST new movie and get updated movielist
+  // AddMovieInTheList (videoTitle) {
+  //   //console.log('query received:', videoTitle);
+  //   axios.post('/api/movies', {title: videoTitle})
+  //   .then((response) => {
+  //     console.log('axios POST new movie Success', response);
+  //   })
+  //   .then(()=> {
+  //     console.log('axios POST successful now, request getAllmovies');
+  //     // call getAllMovies
+  //     this.getAllMovies();
+  //   })
+  //   .catch((error) => {
+  //     console.log('axios POST new movie Error', error);
+  //   });
+  // }

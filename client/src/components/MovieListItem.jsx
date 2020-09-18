@@ -4,8 +4,8 @@ class MovieListItem extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isWatchedToggle: this.props.movie.watched,
-      isTitleClickedForDetails: false
+      isWatchedToggle: this.props.movie.watched
+      // isTitleClickedForDetails: false
     }
 
     this.onWatchedToggleClickHandler = this.onWatchedToggleClickHandler.bind(this);
@@ -18,13 +18,14 @@ class MovieListItem extends React.Component {
     this.setState({
       isWatchedToggle: !this.state.isWatchedToggle
     })
+
   }
 
   UpdateWatchedOrNotWatchedList(event) {
     event.preventDefault();
 
-    // console.log('this.props', this.props)    // undefined
-    this.props.UpdateWatchedToggle(this.props.movie.title, this.state.isWatchedToggle)
+    // ß
+    this.props.UpdateWatchedToggle(this.props.movie.id, this.state.isWatchedToggle)
   }
 
   onTitleClickHandler() {
@@ -35,31 +36,20 @@ class MovieListItem extends React.Component {
   }
 
   render() {
-    let displayMovieDetails;
-    let isTitleClickedForDetail = this.state.isTitleClickedForDetails;
-    if (isTitleClickedForDetail) {
-      displayMovieDetails = <div>
-                              {/* <tr>Year: {this.props.movie.title.year}</tr>
-                              <tr>Runtime: {this.props.movie.detail.runtime}</tr>
-                              <tr>Metascore: {this.props.movie.detail.metascore}</tr>
-                              <tr>imdbRating: {this.props.movie.detail.imdbrating}</tr>
-                              <tr>Watched: {this.props.movie.detail.watched}</tr> */}
-                            </div>
-      // displayMovieDetails = <td>{this.props.movie.datail.year} {this.props.movie.datail.runtime} {this.props.movie.datail.metascore} {this.props.movie.datail.imdbrating} {this.props.movie.datail.watched}</td>
-    } else {
-      displayMovieDetails = null;
-    }
-
     return (
       <div>
         {/* {console.log('this.props.movie.detail.year', this.props.movie.detail.year)} */}
         <td onClick={this.onTitleClickHandler}>{this.props.movie.title}</td>
         <td>
           <form onSubmit={this.UpdateWatchedOrNotWatchedList}>
-            <input type="submit" className='watched-button' value={this.state.isWatchedToggle ? 'Watched' : 'To watch'} onClick={this.onWatchedToggleClickHandler}/>
+            <input type="submit" className='watched-button' value={this.props.movie.watched ? 'Watched' : 'To watch'} onClick={this.onWatchedToggleClickHandler}/>
+            {/* 1. receive the watched data from db, if this.props.movie.watched is 1(true), show 'Watched', otherwise 'To watch'
+                2. whenever click the watched button, update the db by http request
+            */}
+
          </form>
         </td>
-        {displayMovieDetails}
+        {/* {displayMovieDetails} */}
       </div>
     )
   }

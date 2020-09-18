@@ -10,8 +10,8 @@ USE movielist2
 CREATE TABLE movies
 (
   id INT NOT NULL AUTO_INCREMENT,
-  title VARCHAR(150) NOT NULL,
-  watched VARCHAR(150) NOT NULL,
+  title VARCHAR(150) NOT NULL UNIQUE,
+  watched BOOLEAN NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -19,6 +19,6 @@ CREATE TABLE movies
 -- //loading schema file to db:   mysql -u root < schema.sql
 
 INSERT INTO movies ( title, watched) VALUES
-  ( 'movielist2', 'true' ),
-  ( 'hello movie', 'false' ),
-  ( 'babyshark', 'true' );
+  ( 'movielist2', true ),
+  ( 'hello movie', false ),
+  ( 'babyshark', true );
