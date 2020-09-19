@@ -116,57 +116,43 @@ class App extends React.Component {
 
 
 
-  // List for watched movies
+  // GET request for ONLY WATCHED list - data => req.query
   listWatchedMovies() {
-    console.log('BUTTON Watched clicked')
-    var watchedList = [];
-    var lists = this.state.allMovies;
-    for (let i = 0; i < lists.length; i++) {
-      if (lists[i].watched === true) {
-        watchedList.push(lists[i])
-      }
-    }
-    console.log('watchedList',watchedList)
-    this.setState({watchedMovies: watchedList, showWatchedMenu: true, movies:[]})
-  }
+    console.log('WATCHED LIST BUTTON clicked')
 
-  listWatchedMovies() {
-    axios.get('/api/movies')
-    .then((response) => {
-      // console.log('axios GET listWatchedMovies RESPONSE', response.data);
-      let watchedList = response.data.filter((movie) => movie.watched === 'true');
-
-      console.log('axios GET WatchedMovies filted', watchedList);
-      this.setState({
-        allMovies: watchedList
-      })
+    $.ajax({
+      type: "GET",
+      url: '/api/movies/watched',
+      data: {watched: 1},
+      success: (watchedMovies) => {
+        console.log('ajax GET WATCHED LIST Success');
+        // this.getAllMovies();     //* render all movies
+        this.setState({
+          allMovies: watchedMovies
+        })
+      },
+      error: (err) => console.log('ajax GET WATCHED LIST Succes Error', err)
     })
-    .catch((error) => {
-      console.log('axios GET listWatchedMovies ERROR', error);
-    })
-  }
+  };
 
 
-
-  // List for not watched movies
+  // GET request for ONLY WATCHED list - data => req.query
   listNotWatchedMovies() {
-    axios.get('/api/movies')
-    .then((response) => {
-      // console.log('axios GET listWatchedMovies RESPONSE', response.data);
-      let ToWatchList = response.data.filter((movie) => movie.watched === 'false');
+    console.log('TO WATCHED LIST BUTTON clicked')
 
-      console.log('axios GET ToWatchMovies filted', ToWatchList);
-      this.setState({
-        allMovies: ToWatchList
-      })
-    })
-    .catch((error) => {
-      console.log('axios GET ToWatchMovies filted ERROR', error);
+    $.ajax({
+      type: "GET",
+      url: '/api/movies/watched',
+      data: {watched: 0},
+      success: (watchedMovies) => {
+        console.log('ajax GET ToWatch LIST Success');
+        this.setState({
+          allMovies: watchedMovies
+        })
+      },
+      error: (err) => console.log('ajax GET ToWatch LIST Succes Error', err)
     })
   }
-
-
-
 
   render() {
     // Conditional rendering
@@ -229,7 +215,7 @@ export default App;
   //   })
   // }
 
-  // // Search movies with GET & params search
+  // Search movies with GET & params search
   // searchMovies (movieKeyword) {
   //   console.log('query received:', movieKeyword);
   //   // Send a POST request
@@ -257,7 +243,7 @@ export default App;
   // }
 
 
-  // // POST new movie and get updated movielist
+  // POST new movie and get updated movielist
   // AddMovieInTheList (videoTitle) {
   //   //console.log('query received:', videoTitle);
   //   axios.post('/api/movies', {title: videoTitle})

@@ -91,6 +91,42 @@ app.patch('/api/movies/:movieId', (req, res) => {
   })
 })
 
+// GET ONLY WATCHED MOVIES
+app.get('/api/movies/watched', (req, res) => {
+  console.log('req.query', req.query); //get data =>  not req.body => req.query!
+
+  const { watched } = req.query;
+
+  let q = `SELECT * FROM movies WHERE watched = ?`
+  db.query(q, [watched], (err, data) => {
+    if (err) {
+      console.log('CONTROLLER GET WATCHED MOVIES ERROR')
+      res.status(400).send();
+    } else {
+      console.log('CONTROLLER GET WATCHED MOVIES SUCCESS', data)
+      res.status(200).send(data);
+    }
+  })
+})
+
+// GET ONLY UNWATCHED MOVIES
+app.get('/api/movies/watched', (req, res) => {
+  console.log('req.query', req.query); //get data =>  not req.body => req.query!
+
+  const { watched } = req.query;
+
+  let q = `SELECT * FROM movies WHERE watched = ?`
+  db.query(q, [watched], (err, data) => {
+    if (err) {
+      console.log('CONTROLLER GET ToWatch MOVIES ERROR')
+      res.status(400).send();
+    } else {
+      console.log('CONTROLLER GET ToWatch MOVIES SUCCESS', data)
+      res.status(200).send(data);
+    }
+  })
+})
+
 
 
 app.listen(port, () => {

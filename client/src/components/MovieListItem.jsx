@@ -24,7 +24,7 @@ class MovieListItem extends React.Component {
   UpdateWatchedOrNotWatchedList(event) {
     event.preventDefault();
 
-    // ß
+    //
     this.props.UpdateWatchedToggle(this.props.movie.id, this.state.isWatchedToggle)
   }
 
